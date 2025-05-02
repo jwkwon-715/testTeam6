@@ -1,22 +1,35 @@
-const mysql = require('mysql2');
+require('dotenv').config();  // 환경 변수 로드
+const mysql = require('mysql2/promise');
 
-const conn = mysql.createConnection({
-  host: '34.47.123.205',   // GCP VM 외부 IP 주소
-  user: 'cc',            // 만든 사용자 이름
-  password: 'password',       // 설정한 비밀번호
-  database: 'recipe_db'           // 만든 DB 이름
-});
+// MySQL DB 연결
+let test = async () => {
+    const db = mysql.createPool({
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PW,
+        port: process.env.DB_PORT,
+        database: process.env.DB_NAME,
+        waitForConnections: true,
+        insecureAuth: true
+    });
 
-conn.connect(err => {
-  if (err) {
-    console.error('MySQL 연결 실패:', err);
-    return;
-  }
-  console.log('✅ MySQL 연결 성공!');
-});
+    // 데이터 삽입 (INSERT INTO)
+    let insertSql = 'INSERT INTO subscriber (name, email, zipCode) VALUES (?, ?, ?)';
+    let values = ['sswu', 'sswu@sungshin.ac.kr', '12345'];  // 삽입할 데이터
 
-conn.query('SELECT NOW()', (err, results) => {
-  if (err) throw err;
-  console.log('현재 시간:', results);
-  conn.end();
-});
+    try {
+        // 데이터 삽입
+        const [result] = await db.execute(insertSql, values);
+        console.log('데이터 삽입 성공:', result);
+    } catch (err) {
+        console.error('삽입 중 오류 발생:', err);
+    }
+
+    // 데이터 조회 (SELECT)
+    let selectSql = 'SELECT * FROM subscriber';
+    let [rows, fields] = await db.query(selectSql);
+    console.log('현재 subscriber 테이블의 데이터:', rows);
+};
+
+test();
+
