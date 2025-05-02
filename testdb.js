@@ -14,8 +14,8 @@ let test = async () => {
     });
 
     // 데이터 삽입 (INSERT INTO)
-    let insertSql = 'INSERT INTO subscriber (name, email, zipCode) VALUES (?, ?, ?)';
-    let values = ['sswu', 'sswu@sungshin.ac.kr', '12345'];  // 삽입할 데이터
+    //let insertSql = 'INSERT INTO subscriber (name, email, zipCode) VALUES (?, ?, ?)';
+    //let values = ['sswu', 'sswu@sungshin.ac.kr', '12345'];  // 삽입할 데이터
 
     try {
         // 데이터 삽입
