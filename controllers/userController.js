@@ -1,5 +1,6 @@
 // controllers/authController.js
 const bcrypt = require('bcrypt');
+const passport = require('passport');
 const { Users } = require('../models');
 
 // 회원가입 처리
@@ -27,25 +28,16 @@ exports.signup = async (req, res) => {
 };
 
 // 로그인 처리
-exports.login = async (req, res) => {
-  const { email, password } = req.body;
+exports.login = (req, res, next) => {
+  passport.authenticate('local', (err, user, info) => {
+    if (err) return next(err);
+    if (!user) return res.status(401).send(info.message); // 로그인 실패 메시지
 
-  try {
-    const user = await Users.findOne({ where: { email } });
-
-    if (user) {
-      const isMatch = await bcrypt.compare(password, user.password);
-
-      if (isMatch) {
-        res.send('로그인 성공');
-      } else {
-        res.send('이메일 또는 비밀번호가 잘못되었습니다.');
-      }
-    } else {
-      res.send('이메일 또는 비밀번호가 잘못되었습니다.');
-    }
-  } catch (error) {
-    console.error(error);
-    res.send('로그인 중 오류가 발생했습니다.');
-  }
+    req.logIn(user, (err) => {
+      if (err) return next(err);
+      
+      // 로그인 성공 후 프로필 페이지로 리디렉션
+      return res.redirect('/users/profile');  // 로그인 후 프로필 페이지로 리디렉션
+    });
+  })(req, res, next);
 };
