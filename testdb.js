@@ -26,7 +26,7 @@ let test = async () => {
     }
 
     // 데이터 조회 (SELECT)
-    let selectSql = 'SELECT * FROM subscriber';
+    let selectSql = 'SELECT * FROM users';
     let [rows, fields] = await db.query(selectSql);
     console.log('현재 subscriber 테이블의 데이터:', rows);
 };
