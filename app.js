@@ -9,6 +9,9 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 
+const db = require('./models'); // index.js가 있는 models 폴더
+const passport = require("passport");
+
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
@@ -27,6 +30,14 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+db.sequelize.sync()
+  .then(() => {
+    console.log('✅ 데이터베이스 연결 성공');
+  })
+  .catch((err) => {
+    console.error('❌ 데이터베이스 연결 실패:', err);
+  });
+
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
@@ -37,5 +48,10 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+app.listen(3000, '0.0.0.0', () => {
+  console.log('Server running on http://34.64.197.111:3000');
+});
+
 
 module.exports = app;
