@@ -27,9 +27,15 @@ app.use(passport.initialize());
 app.use(passport.session());
 passportConfig(passport);  // passport 설정 적용
 
+//쿼리 파라미터를 EJS에서 사용할 수 있도록 설정 추가
+app.use((req, res, next) => {
+  res.locals.query = req.query;
+  next();
+});
+
 // 기본 미들웨어
 app.use(logger('dev'));
-app.use(express.json());
+app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -42,6 +48,8 @@ app.use('/users', usersRouter);
 app.use(function(req, res, next) {
   next(createError(404));
 });
+
+
 
 // DB 연결
 db.sequelize.sync()

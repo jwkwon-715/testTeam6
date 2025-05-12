@@ -3,15 +3,21 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const { Users } = require('../models');
 
-// 회원가입 처리
+// 회원가입 처리_
+
 exports.signup = async (req, res) => {
-  const { user_id, password, phone, email, birthdate } = req.body;
+  const { user_id, password, password2, phone, email, birthdate } = req.body;
+
+  // 1. 비밀번호 일치 확인
+  if (password !== password2) {
+    return res.send('❌ 비밀번호가 일치하지 않습니다.');
+  }
 
   try {
-    // 비밀번호 해싱
-    const hashedPassword = await bcrypt.hash(password, 10); // 10은 saltRounds
+    // 2. 비밀번호 해싱
+    const hashedPassword = await bcrypt.hash(password, 10); // saltRounds = 10
 
-    // 사용자 생성
+    // 3. 사용자 생성
     await Users.create({
       user_id,
       password: hashedPassword,
@@ -20,12 +26,16 @@ exports.signup = async (req, res) => {
       birthdate,
     });
 
-    res.send('회원가입 성공');
+    // 4. 회원가입 후 로그인 페이지로 이동
+      res.redirect('/users/login?success=1')
+
+
   } catch (error) {
     console.error(error);
     res.send('회원가입 중 오류가 발생했습니다.');
   }
 };
+
 
 // 로그인 처리
 exports.login = (req, res, next) => {
