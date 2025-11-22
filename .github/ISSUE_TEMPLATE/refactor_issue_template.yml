@@ -4,7 +4,7 @@ labels: ["refactor"]
 body:
   - type: textarea
     attributes:
-      label: 리팩토링 대상
+      label: 📄 리팩토링 대상
       description: 어떤 부분을 리팩토링할지 구체적으로 작성해 주세요.
       placeholder: "UserService의 중복 로직 제거, API 응답 구조 정리 등"
     validations:
@@ -21,10 +21,10 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: 기대 효과
+      label: 🛠️ 기대 효과
       description: 리팩토링 완료 후 기대되는 효과나 개선 사항을 작성해 주세요.
       placeholder: "유지보수성 향상, 코드 가독성 증가, 테스트 용이성 개선 등"
   - type: textarea
     attributes:
-      label: 참고 자료
+      label: 🙋🏻 참고 자료
       description: 참고 가능한 문서나 레퍼런스를 작성해 주세요.
